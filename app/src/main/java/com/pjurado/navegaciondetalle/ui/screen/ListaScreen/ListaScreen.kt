@@ -2,6 +2,7 @@ package com.pjurado.navegaciondetalle.ui.screen.ListaScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,7 @@ import com.pjurado.navegaciondetalle.R
 import com.pjurado.navegaciondetalle.data.repositories.repositoryList
 
 @Composable
-fun ListaScreen() {
+fun ListaScreen(navigateToDetail: (Int) -> Unit) {
     val lista = repositoryList.getMedia()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -46,18 +47,20 @@ fun ListaScreen() {
         //modifier = Modifier.fillMaxSize()
     ) {
         items(lista) { mediaItem ->
-            MediaListItem(mediaItem)
+            MediaListItem(mediaItem, navigateToDetail)
         }
     }
 }
 
 @Composable
-private fun MediaListItem(mediaItem: MediaItem) {
+private fun MediaListItem(mediaItem: MediaItem, navigateToDetail: (Int) -> Unit) {
     Column(
         modifier = Modifier
             .width(200.dp)
-            .padding(2.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(2.dp)
+            .clickable { navigateToDetail(mediaItem.id) },
+        horizontalAlignment = Alignment.CenterHorizontally,
+
     ) {
         Imagen(item = mediaItem)
         Title(item = mediaItem)
@@ -97,7 +100,7 @@ fun Imagen(item: MediaItem, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Title(item: MediaItem) {
+fun Title(item: MediaItem) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
