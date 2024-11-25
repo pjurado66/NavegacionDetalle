@@ -8,9 +8,9 @@ import com.pjurado.navegaciondetalle.ui.screen.ListaScreen.Title
 
 @Composable
 fun DetailScreen(id: Int) {
-    val mediaItem = repositoryList.getMedia().find { it.id == id }
-    if (mediaItem != null) {
-        Imagen(mediaItem)
-        Title(mediaItem)
-    }
+//    val mediaItem = repositoryList.getMedia().find { it.id == id }
+//    if (mediaItem != null) {
+//        Imagen(mediaItem)
+//        Title(mediaItem)
+//    }
 }
