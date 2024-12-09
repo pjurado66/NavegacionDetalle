@@ -16,51 +16,34 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.proyectoui.model.MediaItem
 import com.example.proyectoui.model.Type
-import com.pjurado.navegaciondetalle.R
-import com.pjurado.navegaciondetalle.data.repositories.repositoryList
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 @Composable
-fun ListaScreen(navigateToDetail: (Int) -> Unit) {
-    val scope = rememberCoroutineScope()
-    var lista by remember { mutableStateOf(emptyList<MediaItem>()) }
+fun ListaScreen(viewModel: ListaViewModel, navigateToDetail: (Int) -> Unit) {
 
-    LaunchedEffect(Unit) {
-        scope.launch {
-            val lista1 = async{repositoryList.getMedia("Seville")}
-            val lista2  = async{repositoryList.getMedia("Cadiz")}
-            lista = lista1.await() + lista2.await()
-        }
-    }
+    val lista by viewModel.lista.observeAsState(emptyList())
+    val progressBar by viewModel.progressBar.observeAsState(false)
 
-    if (lista.isEmpty()) {
+
+
+    if (progressBar) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -69,16 +52,28 @@ fun ListaScreen(navigateToDetail: (Int) -> Unit) {
         }
     } else {
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            //modifier = Modifier.fillMaxSize()
-        ) {
-            items(lista) { mediaItem ->
-                MediaListItem(mediaItem, navigateToDetail)
+
+        if (lista!!.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No hay elementos", style = MaterialTheme.typography.bodySmall)
+            }
+        } else {
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                //modifier = Modifier.fillMaxSize()
+            ) {
+                items(lista!!) { mediaItem ->
+                    MediaListItem(mediaItem, navigateToDetail)
+                }
             }
         }
     }
+
 }
 
 @Composable
@@ -90,7 +85,7 @@ private fun MediaListItem(mediaItem: MediaItem, navigateToDetail: (Int) -> Unit)
             .clickable { navigateToDetail(mediaItem.id) },
         horizontalAlignment = Alignment.CenterHorizontally,
 
-    ) {
+        ) {
         Imagen(item = mediaItem)
         Title(item = mediaItem)
     }

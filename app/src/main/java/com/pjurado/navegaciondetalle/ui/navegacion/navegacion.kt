@@ -7,13 +7,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.pjurado.navegaciondetalle.ui.screen.DetailScreen.DetailScreen
 import com.pjurado.navegaciondetalle.ui.screen.ListaScreen.ListaScreen
+import com.pjurado.navegaciondetalle.ui.screen.ListaScreen.ListaViewModel
 
 @Composable
 fun Navegacion() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Lista) {
         composable<Lista> {
-            ListaScreen { id ->
+            val viewModel = ListaViewModel()
+            ListaScreen(viewModel) { id ->
                 navController.navigate(Detail(id))
             }
         }
