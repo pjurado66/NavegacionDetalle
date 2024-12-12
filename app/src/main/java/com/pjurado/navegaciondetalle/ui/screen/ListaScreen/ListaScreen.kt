@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
@@ -129,12 +130,14 @@ fun Title(item: MediaItem) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondary)
+            .height(50.dp)
+            .background(Color.Cyan)
             .padding(16.dp)
     ) {
         Text(
             text = item.title,
-            style = MaterialTheme.typography.displaySmall
+            style = MaterialTheme.typography.labelLarge,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

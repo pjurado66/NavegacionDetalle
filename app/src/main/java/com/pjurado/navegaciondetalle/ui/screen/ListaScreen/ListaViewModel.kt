@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyectoui.model.MediaItem
+import com.pjurado.navegaciondetalle.data.repositories.RemoteConectecition
 import com.pjurado.navegaciondetalle.data.repositories.repositoryList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -20,7 +21,15 @@ class ListaViewModel: ViewModel() {
     init {
         _progressBar.value = true
         viewModelScope.launch() {
-            _lista.value = repositoryList.getMedia("Seville")
+            //_lista.value = repositoryList.getMedia("Seville")
+            val movies = RemoteConectecition.service.getMovies("90ed410279841454998676e620cc1cbb")
+            _lista.value = movies.results.map {
+                MediaItem(
+                    it.id,
+                    it.title,
+                    "https://image.tmdb.org/t/p/w185" + it.poster_path
+                )
+            }
             _progressBar.value = false
         }
     }

@@ -66,6 +66,9 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation(libs.androidx.runtime.livedata)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
