@@ -1,4 +1,4 @@
-package com.pjurado.navegaciondetalle.data.model
+package com.pjurado.navegaciondetalle.data.repositories.model
 
 data class Response(
     val page: Int,

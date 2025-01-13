@@ -110,16 +110,16 @@ fun Imagen(item: MediaItem, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-        if (item.tipo == Type.VIDEO) {
-            Icon(
-                imageVector = Icons.Default.PlayCircleOutline,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier
-                    .size(92.dp)
-                    .align(Alignment.Center)
-            )
-        }
+//        if (item.tipo == Type.VIDEO) {
+//            Icon(
+//                imageVector = Icons.Default.PlayCircleOutline,
+//                contentDescription = null,
+//                tint = Color.White,
+//                modifier = Modifier
+//                    .size(92.dp)
+//                    .align(Alignment.Center)
+//            )
+//        }
 
     }
 }
