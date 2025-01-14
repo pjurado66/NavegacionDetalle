@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.pjurado.navegaciondetalle.data.db.MovieDAO
 import com.pjurado.navegaciondetalle.ui.screen.DetailScreen.DetailScreen
 import com.pjurado.navegaciondetalle.ui.screen.ListaScreen.ListaScreen
 import com.pjurado.navegaciondetalle.ui.screen.ListaScreen.ListaViewModel
@@ -14,8 +15,7 @@ fun Navegacion() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Lista) {
         composable<Lista> {
-            val viewModel = ListaViewModel()
-            ListaScreen(viewModel) { id ->
+            ListaScreen { id ->
                 navController.navigate(Detail(id))
             }
         }

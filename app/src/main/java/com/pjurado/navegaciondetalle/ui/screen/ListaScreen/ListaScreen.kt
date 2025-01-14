@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -31,59 +32,65 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.example.proyectoui.model.MediaItem
 import com.example.proyectoui.model.Type
+import com.pjurado.navegaciondetalle.App
 
 @Composable
-fun ListaScreen(viewModel: ListaViewModel, navigateToDetail: (Int) -> Unit) {
+fun ListaScreen(navigateToDetail: (Int) -> Unit) {
+    val movieDao = (LocalContext.current.applicationContext as App).db.movieDao()
+    val factory = ListaViewModelFactory(movieDao = movieDao)
+    val viewModel: ListaViewModel = viewModel(factory = factory)
 
-    val lista by viewModel.lista.observeAsState(emptyList())
-    val progressBar by viewModel.progressBar.observeAsState(false)
+    val uiState by viewModel.lista.observeAsState(UiState())
 
-
-
-    if (progressBar) {
+    if (uiState?.loading == true) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
         }
-    } else {
+    }
 
-
-        if (lista!!.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("No hay elementos", style = MaterialTheme.typography.bodySmall)
-            }
-        } else {
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                //modifier = Modifier.fillMaxSize()
-            ) {
-                items(lista!!) { mediaItem ->
-                    MediaListItem(mediaItem, navigateToDetail)
-                }
+    if (uiState.movies?.isNotEmpty() == true) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            items(uiState.movies!!) { mediaItem ->
+                MediaListItem(mediaItem, viewModel)
             }
         }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("No hay elementos")
+        }
     }
+
+    LaunchedEffect(uiState.navigateTo != null) {
+        if (uiState.navigateTo != null) {
+            navigateToDetail(uiState.navigateTo!!)
+            viewModel.navigateToDetailDone()
+        }
+    }
+
 
 }
 
 @Composable
-private fun MediaListItem(mediaItem: MediaItem, navigateToDetail: (Int) -> Unit) {
+private fun MediaListItem(mediaItem: MediaItem, viewModel: ListaViewModel) {
     Column(
         modifier = Modifier
             .width(200.dp)
             .padding(2.dp)
-            .clickable { navigateToDetail(mediaItem.id) },
+            .clickable { viewModel.navigateToDetail(mediaItem.id) },
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {

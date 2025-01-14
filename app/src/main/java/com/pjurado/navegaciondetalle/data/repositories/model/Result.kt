@@ -1,6 +1,7 @@
 package com.pjurado.navegaciondetalle.data.repositories.model
 
 import com.example.proyectoui.model.MediaItem
+import com.pjurado.navegaciondetalle.data.db.MovieDB
 
 data class Result(
     val adult: Boolean,
@@ -27,4 +28,18 @@ fun Result.toMediaItem() = MediaItem(
     original_title,
     overview,
     vote_average
+)
+
+fun Result.toMovieDB(): MovieDB = MovieDB(
+    id,
+    adult,
+    backdrop_path,
+    original_language,
+    original_title,
+    overview,
+    popularity,
+    poster_path,
+    title,
+    vote_average,
+    vote_count
 )
